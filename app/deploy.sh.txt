@@ -1,0 +1,17 @@
+#!/bin/bash
+
+echo "🚀 Deploy iniciando..."
+
+cd ~/bot/languaguebot || exit
+
+git pull
+
+source .venv/bin/activate
+pip install -r requirements.txt
+
+cd app || exit
+python manage.py migrate
+
+touch /var/www/seu_usuario_pythonanywhere_com_wsgi.py
+
+echo "✅ Deploy concluído!"

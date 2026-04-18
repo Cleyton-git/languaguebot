@@ -1,4 +1,5 @@
 .venv/
 fluxograma.txt
-oqvoufazerhoje/
-v5/
+Scripts/
+.gitignore
+pyvenv.py
