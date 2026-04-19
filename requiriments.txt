@@ -15,11 +15,13 @@ frozendict==2.4.7
 futures==3.0.5
 genanki==0.13.1
 goslate==1.5.4
+gunicorn==25.3.0
 idna==3.11
 joblib==1.5.3
 Korpora==0.2.0
 nltk==3.9.3
 numpy==2.4.3
+packaging==26.1
 PyDictionary==2.0.1
 PyYAML==6.0.3
 regex==2026.2.28
