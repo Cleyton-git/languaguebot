@@ -1,5 +1,6 @@
 .venv/
+versions/
 fluxograma.txt
-Scripts/
-.gitignore
-pyvenv.py
+pyvenv.cfg
+app/Include/
+app/Scripts/
