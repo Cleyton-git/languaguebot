@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-cd app && gunicorn app.wsgi:application
+cd app && gunicorn CRUD.wsgi:application
