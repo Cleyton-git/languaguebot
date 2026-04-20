@@ -19,7 +19,7 @@ class Usuario(models.Model):
     
 class FraseUsuario(models.Model):
     usuario = models.ForeignKey("Usuario", on_delete=models.CASCADE)
-    palavra = models.CharField()
+    palavra = models.CharField(max_length=100)
     frase = models.TextField()
     
     def __str__(self):
