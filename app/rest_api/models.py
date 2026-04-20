@@ -7,7 +7,7 @@ class Id(models.Model):
         return f"Id: {self.id}"
 
 class Usuario(models.Model):
-    telegram_id = models.IntegerField(primary_key=True)
+    telegram_id = models.BigIntegerField(primary_key=True)
     palavra_inicial = models.IntegerField(default=0)
     palavra_atual = models.IntegerField(default=0)
     streak = models.IntegerField(default=0)
