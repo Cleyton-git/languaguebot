@@ -25,7 +25,10 @@ def dec(tele_id, req):
             return backend_tela_jornada.processar_palavra(user, req)
         
         elif user.tela_atual == "ondoku":
-            user_ondoku = UsuarioOndoku.objects.filter(usuario=user.telegram_id).first()
+            user_ondoku, created = UsuarioOndoku.objects.get_or_create(
+                usuario=user,
+                defaults={"ondoku_atual": 0}
+            )
             telas.Tela_ondoku(user, req, user_ondoku)
             
         elif user.tela_atual == "anki":
