@@ -3,6 +3,9 @@ import csv
 from itertools import islice
 from . import telas, enviar_telegram
 from ..models import FraseUsuario, UsuarioOndoku
+import spacy
+
+nlp = spacy.load("en_core_web_sm")
 
 def pegar_palavra(user):
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -25,11 +28,15 @@ def processar_palavra(user, req):
         return
     palavra = pegar_palavra(user)
     palavra_correta = palavra[0]
+    palavra_correta = palavra_correta.lower().strip()
     
-    if palavra_correta == req:
+    doc = nlp(req)
+    lemmas = [token.lemma_.lower().strip() for token in doc]
+
+    if palavra_correta == req.strip().lower(): #apenas a palavra not passa
         enviar_telegram.enviar_telegram(id=user.telegram_id, msg=f"Você apenas digitou {req} digite a palavra em uma frase", func="send_msg")
         return
-    elif palavra_correta.lower() not in req.lower().split():
+    elif palavra_correta not in lemmas: # Identifica se a palavra 
         enviar_telegram.enviar_telegram(id=user.telegram_id, msg=f"Use a palavra '{palavra_correta}' na frase!", func="send_msg")
         return
     

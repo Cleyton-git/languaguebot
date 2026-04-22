@@ -1,5 +1,9 @@
-1 - O CARA VAI PODER USAR AS PALAVRAS NO PASSADO, INFINITO, PRESENTE PERFEITO E ETC. Tipo arrive = My mother arrived
-2 - Algumas frases, mesmo com as palavras estão bugando e falando que não tem. He has a camera, it's can take good pictures (erro) Will you do something in August? (erro)
-3 - Antes do audio do ondoku, deve haver uma mensagem como: "Tente ler enquanto ouve o audio"
-4 - A mensagem final não tem a recomendação de "Veja conteudos por pelo menos 1hora em ingles", deve ter
-5 - Na pasta final eu ensinei a como BAIXAR o anki mas não a como USAR ele para revisar o ingles, devo fazer isso
+1 - O CARA VAI PODER USAR AS PALAVRAS NO PASSADO, INFINITO, PRESENTE PERFEITO E ETC. Tipo arrive = My mother arrived. FEITO
+2 - Algumas frases, mesmo com as palavras estão bugando e falando que não tem. He has a camera, it's can take good pictures (erro) Will you do something in August? (erro). FEITO
+3 - Antes do audio do ondoku, deve haver uma mensagem como: "Tente ler enquanto ouve o audio". FEITO
+4 - A mensagem final não tem a recomendação de "Veja conteudos por pelo menos 1hora em ingles", deve ter. FEITO
+5 - Na pasta final eu ensinei a como BAIXAR o anki mas não a como USAR ele para revisar o ingles, devo fazer isso. FEITO
+	Fluxo - 1. O usuario instala o LAPIS.apkg
+		2. O usuario importa esse deck
+		3. O usuario instala o ankiconnect
+		4. O usuario clica no .bat. FEITO

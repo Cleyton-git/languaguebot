@@ -35,32 +35,20 @@ def dec(tele_id, req):
             if req.lower() == "/sim":
                 frases_user = FraseUsuario.objects.filter(usuario=user.telegram_id).all()
                 data = date.today()
-                model = send_anki.create_model()
-                deck = send_anki.create_deck()
-                for c in frases_user:
-                    note = genanki.Note(model=model, fields=[c.palavra, c.frase])
-                    deck.add_note(note)
-                with tempfile.NamedTemporaryFile(delete=False, suffix=".apkg") as tmp:
-                    caminho = tmp.name
-                genanki.Package(deck).write_to_file(caminho)
-                with open(caminho, "rb") as f:
-                    apkg_bytes = f.read()
-                os.remove(caminho)
                 if user.streak == 0:
-                    zip_buffer = criar_zip(apkg_bytes, frases_user, incluir_instrucao = True)
+                    zip_buffer = criar_zip(frases_user, incluir_instrucao = True)
                 else:
-                    zip_buffer = criar_zip(apkg_bytes, frases_user, incluir_instrucao = False)
+                    zip_buffer = criar_zip(frases_user, incluir_instrucao = False)
                 requests.post(f"https://api.telegram.org/bot8249452727:AAExS5DziVnWEUy2kXO-pwFZ5nmhiCt2aBs/sendDocument", 
                               data={"chat_id": user.telegram_id}, 
                               files={"document": (f"pacote{data.day}-{data.month}-{data.year}.zip", zip_buffer)})
             FraseUsuario.objects.filter(usuario=user.telegram_id).delete()
-            enviar_telegram.enviar_telegram(id=user.telegram_id, msg=f"Você já fez sua jornada hoje. Recomendo descansar e apenas consumir conteúdo em inglês.\nEspere até as {timezone.localtime(user.proximo_estudo).strftime("%H:%M")} de amanhã\n[ /iniciar ] - reinicia o ciclo (não recomendado)", func="send_msg")
+            enviar_telegram.enviar_telegram(id=user.telegram_id, msg=f"Você já fez sua jornada hoje. Recomendo descansar e apenas consumir conteúdo em inglês por 1h.\nEspere até as {timezone.localtime(user.proximo_estudo).strftime("%H:%M")} de amanhã\n[ /iniciar ] - reinicia o ciclo (não recomendado)", func="send_msg")
             user.tela_atual = "descanso"
             user.proximo_estudo = timezone.now() + timedelta(hours=24)
             user.streak += 1
             user.save()
             return
-        
             
         elif user.tela_atual == "descanso":
             if req == "/iniciar":

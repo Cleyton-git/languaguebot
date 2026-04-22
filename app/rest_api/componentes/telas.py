@@ -73,6 +73,7 @@ def Tela_ondoku(user, req, user_ondoku):
             user_ondoku.ondoku_atual += 1
             user_ondoku.save()
         elif req.lower() == "/ok" and ondoku_atual == 1:
+            enviar_telegram.enviar_telegram(id=id, msg=f"Tente ler enquanto ouve o audio", func="send_msg")
             enviar_telegram.enviar_telegram(id=id, func="send_mp3", msg="1")
             enviar_telegram.enviar_telegram(id=id, msg=f"Digite '/ok' quando terminar", func="send_msg")
             user_ondoku.ondoku_atual += 1
