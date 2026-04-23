@@ -32,11 +32,12 @@ def processar_palavra(user, req):
     
     doc = nlp(req)
     lemmas = [token.lemma_.lower().strip() for token in doc]
+    print(palavra_correta, lemmas)
 
     if palavra_correta == req.strip().lower(): #apenas a palavra not passa
         enviar_telegram.enviar_telegram(id=user.telegram_id, msg=f"Você apenas digitou {req} digite a palavra em uma frase", func="send_msg")
         return
-    elif palavra_correta not in lemmas: # Identifica se a palavra 
+    if not any(t.lemma_.lower() == palavra_correta or t.text.lower() == palavra_correta for t in doc):
         enviar_telegram.enviar_telegram(id=user.telegram_id, msg=f"Use a palavra '{palavra_correta}' na frase!", func="send_msg")
         return
     

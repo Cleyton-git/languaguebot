@@ -103,17 +103,14 @@ def Tela_ondoku(user, req, user_ondoku):
             user_ondoku.save()
             user.tela_atual = "anki"
             user.save()
-            enviar_telegram.enviar_telegram(id=user.telegram_id, msg="📘 Seu deck está pronto!", func="send_msg")
-            Tela_anki(user, req)
-            enviar_telegram.enviar_telegram(id=user.telegram_id, msg="📦 Quer salvar seu progresso? Posso fazer um .zip com palavras, frases e deck de hoje\nDigite /sim se quiser\nDigite qualquer coisa se não", func="send_msg")
         else:
             enviar_telegram.enviar_telegram(id=id, msg=f"Digite /ok", func="send_msg")
     return
 
-def Tela_anki(user, req):
-    model = send_anki.create_model()
-    deck = send_anki.create_deck()
-    dec = send_anki.create_apkg(model, deck, user.telegram_id)
+#def Tela_anki(user, req):
+#    model = send_anki.create_model()
+#    deck = send_anki.create_deck()
+#    dec = send_anki.create_apkg(model, deck, user.telegram_id)
         
 
 def Tela_imersao(user):

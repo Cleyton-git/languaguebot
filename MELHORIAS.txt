@@ -7,3 +7,7 @@
 		2. O usuario importa esse deck
 		3. O usuario instala o ankiconnect
 		4. O usuario clica no .bat. FEITO
+
+6 - Tenho que tirar a criação do DECK, isso não é mais necessario, apenas o .zip vai ser enviado agr. FEITO
+7 - A palavra 39, worse, por algum motivo esta dando erro falando que não estou usando a palavra. aoq parece, o lemma de worse
+vai ser ''bad'', então o worse nunca vai estar na lista, resultando sempre no msm ''acerto errado''. FEITO

@@ -32,16 +32,17 @@ def dec(tele_id, req):
             telas.Tela_ondoku(user, req, user_ondoku)
             
         elif user.tela_atual == "anki":
-            if req.lower() == "/sim":
-                frases_user = FraseUsuario.objects.filter(usuario=user.telegram_id).all()
-                data = date.today()
-                if user.streak == 0:
-                    zip_buffer = criar_zip(frases_user, incluir_instrucao = True)
-                else:
-                    zip_buffer = criar_zip(frases_user, incluir_instrucao = False)
-                requests.post(f"https://api.telegram.org/bot8249452727:AAExS5DziVnWEUy2kXO-pwFZ5nmhiCt2aBs/sendDocument", 
-                              data={"chat_id": user.telegram_id}, 
-                              files={"document": (f"pacote{data.day}-{data.month}-{data.year}.zip", zip_buffer)})
+            frases_user = FraseUsuario.objects.filter(usuario=user.telegram_id).all()
+            data = date.today()
+            
+            if user.streak == 0:
+                zip_buffer = criar_zip(frases_user, incluir_instrucao = True)
+            else:
+                zip_buffer = criar_zip(frases_user, incluir_instrucao = False)
+            requests.post(f"https://api.telegram.org/bot8249452727:AAExS5DziVnWEUy2kXO-pwFZ5nmhiCt2aBs/sendDocument", 
+                            data={"chat_id": user.telegram_id}, 
+                            files={"document": (f"pacote{data.day}-{data.month}-{data.year}.zip", zip_buffer)})
+            
             FraseUsuario.objects.filter(usuario=user.telegram_id).delete()
             enviar_telegram.enviar_telegram(id=user.telegram_id, msg=f"Você já fez sua jornada hoje. Recomendo descansar e apenas consumir conteúdo em inglês por 1h.\nEspere até as {timezone.localtime(user.proximo_estudo).strftime("%H:%M")} de amanhã\n[ /iniciar ] - reinicia o ciclo (não recomendado)", func="send_msg")
             user.tela_atual = "descanso"

@@ -74,34 +74,74 @@ def gerar_bat():
 
 def gerar_py():
     return """import requests
+import os
 
-def add_card(front, back):
-    url = "http://localhost:8765"
+ANKI_URL = "http://localhost:8765"
+DECK_NAME = "Lapis"
+MODEL_NAME = "Lapis"
+
+def add_card(palavra, traducao, frase):
     data = {
         "action": "addNote",
         "version": 6,
         "params": {
             "note": {
-                "deckName": "LAPIS",
-                "modelName": "Basic",
+                "deckName": DECK_NAME,
+                "modelName": MODEL_NAME,
                 "fields": {
-                    "Front": front,
-                    "Back": back
+                    "Expression": palavra,
+                    "Meaning": traducao,
+                    "Sentence": frase
                 },
-                "tags": ["auto"]
+                "tags": ["lapis"]
             }
         }
-        }
-    requests.post(url, json=data)
+    }
 
-    with open("palavras.txt", "r", encoding="utf-8") as f:
+    response = requests.post(ANKI_URL, json=data)
+    return response.json()
+
+
+def main():
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    caminho_txt = os.path.join(base_dir, "palavras.txt")
+
+    if not os.path.exists(caminho_txt):
+        print("Arquivo palavras.txt não encontrado!")
+        return
+
+    enviados = 0
+
+    with open(caminho_txt, "r", encoding="utf-8") as f:
         for linha in f:
-            if "-" in linha:
-                palavra, resto = linha.split("-", 1)
-                front = palavra.strip()
-                back = resto.strip()
-                add_card(front, back)
+            linha = linha.strip()
 
-    print("Cards enviados!")
-    """
+            if not linha or "-" not in linha or "|" not in linha:
+                continue
+
+            try:
+                palavra, resto = linha.split("-", 1)
+                traducao, frase = resto.split("|", 1)
+
+                palavra = palavra.strip()
+                traducao = traducao.strip()
+                frase = frase.strip()
+
+                res = add_card(palavra, traducao, frase)
+
+                if res.get("error"):
+                    print(f"Erro ao enviar: {linha}")
+                else:
+                    enviados += 1
+
+            except Exception as e:
+                print(f"Erro na linha: {linha}")
+                print(e)
+
+    print(f"\\n✅ {enviados} cards enviados!")
+
+
+if __name__ == "__main__":
+    main()
+"""
         
