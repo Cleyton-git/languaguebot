@@ -33,6 +33,10 @@ def dec(tele_id, req):
             
         elif user.tela_atual == "anki":
             frases_user = FraseUsuario.objects.filter(usuario=user.telegram_id).all()
+            frases = []
+            for c in frases_user:
+                frases.append(c.frase)
+            # BLOCO PARA ENVIARA AS FRASES PARA O GPT
             data = date.today()
             
             if user.streak == 0:

@@ -1,7 +1,9 @@
 .venv/
 versions/
+.gitignore
 fluxograma.txt
-pyvenv.cfg
 app/Include/
 app/Scripts/
 MELHORIAS.TXT
+
+

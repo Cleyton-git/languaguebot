@@ -8,7 +8,7 @@ from deep_translator import GoogleTranslator
 
 def Tela_incial(tele_id):
     user = Usuario.objects.filter(telegram_id=tele_id).first()
-    palavras_user = user.palavra_atual
+    palavras_user = user.palavra_inicial
     porcentagem = round((palavras_user / 3600) * 100, 1)
     streak = user.streak
     enviar_telegram.enviar_telegram(
