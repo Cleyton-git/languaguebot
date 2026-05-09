@@ -11,3 +11,11 @@
 6 - Tenho que tirar a criação do DECK, isso não é mais necessario, apenas o .zip vai ser enviado agr. FEITO
 7 - A palavra 39, worse, por algum motivo esta dando erro falando que não estou usando a palavra. aoq parece, o lemma de worse
 vai ser ''bad'', então o worse nunca vai estar na lista, resultando sempre no msm ''acerto errado''. FEITO
+
+8 - Quando o cara tiver streak 0, o programa deve enviar um pacote de instação do python junto com o requests, isso para o 
+.bat funcionar. FEITO
+
+9 - A palavra número 66 esta dando problema, é o except. FEITO
+
+10 - Quando o usuario digitar /keys ele deve ver se tem alguma key para ele usar. (APENAS NO ALPHA!!)
+

@@ -1,25 +1,29 @@
 import io
 from deep_translator import GoogleTranslator
 import zipfile
+import os
 
-def criar_zip(frases, incluir_instrucao):
+def criar_zip(frases, incluir_extras):
     zip_buffer = io.BytesIO()
     
     palavras_txt = gerar_txt_frases(frases)
-    bat_content = gerar_bat()
-    py_content = gerar_py()
 
     with zipfile.ZipFile(zip_buffer, 'w') as zipf:
-        zipf.writestr("palavras.txt", palavras_txt.getvalue())
-        zipf.writestr("run.bat", bat_content)
-        zipf.writestr("add_card.py", py_content)
+        zipf.writestr("frases.txt", palavras_txt.getvalue())
 
-        if incluir_instrucao:
-            zipf.writestr("LEIA-ME.txt", gerar_instrucao().getvalue())
+        if incluir_extras:
+            bat_content, bat_content_dependencias = gerar_bat()
+            py_content = gerar_py()
+            lapis_apkg = os.path.join(os.path.dirname(__file__), "Lapis.apkg")
+            
+            zipf.writestr("leia-me.txt", gerar_instrucao().getvalue())
+            zipf.writestr("enviar_anki.bat", bat_content)
+            zipf.writestr("instalar_dependencias.bat", bat_content_dependencias)
+            zipf.writestr("add_card.py", py_content)
+            zipf.write(lapis_apkg, arcname="Lapis.apkg")
 
     zip_buffer.seek(0)
     return zip_buffer
-
 
 def gerar_txt_frases(frases_user):
     buffer = io.BytesIO()
@@ -37,21 +41,28 @@ def gerar_instrucao():
     buffer = io.BytesIO()
 
     texto = (
-        "Como usar o Anki:\n\n"
+        "Como usar o sistema:\n\n"
         "Desktop:\n"
-        "1. Baixe o Anki:https://apps.ankiweb.net/\n"
-        "2. Baixe um deck padrão: https://ankiweb.net/shared/info/1827837348\n"
-        "3. Abra o deck que você baixou\n"
-        "4. Instale o anki connect (ctrl+shift+a/obter extensões, coloque esse código -> 2055492159 e reinicie o anki)\n"
-        "5. Clique no import.bat\n"
-        "6. Após isso, é so clicar no import.bat com o anki aberto todos os dias\n"
-        "Android:\n"
-        "1. Baixe o anki na play/app store\n"
-        "2. Clique nos 3 pontos no canto superior direito\n"
-        "3. Importar e baralho (.apkg)\n"
-        "4. Selecione o .apkg que você baixou)\n"
+        "1. Clique no instalar_dependencias\n"
+        "2. Abra o Lapis.apkg, double click e importe o deck\n"
+        "3. Instale o anki connect (ctrl+shift+a/obter extensões, coloque esse código -> 2055492159 e reinicie o anki)\n"
+        "4. Apartir daqui você ja pode excluir o instalar_dependencias.bat e o Lapis.apkg\n"
+        "5. Clique no enviar_anki\n"
+        "6. Crie uma pasta chamada (data atual ou a maneira que você quiser) e coloque o frases.txt\n"
+        "7. REPITA O PROCESSO DO 5 E 6 TODOS OS DIAS\n"
+        "8. OBS: NUNCA apague o add_card e o enviar_anki\n"
+        "9. Se quiser, pode abaixar o leia-me.txt tbm"
+        "\nPasso a passo para os proximos dias:\n"
+        "1.Faça as tarefas no telegram\n"
+        "2.Extraia os arquivos nessa pasta\n"
+        "3.Clique no enviar_anki\n"
+        "4.Crie a nova pasta com o nome de (data atual) e coloque o frases.txt\n"
+        "5.E repete no proximo dia.\n"
+        "6.(com o tempo isso vai ser tudo automatizado tbm)\n"
+        "Qualquer dúvida ou bug ou recomendação me chamar no email: cleytoncontato281@gmail.com\n"
+        "\nAndroid:\n"
+        "AINDA EM CONSTRUÇÃO\n"
     )
-
     buffer.write(texto.encode("utf-8"))
     buffer.seek(0)
 
@@ -59,6 +70,34 @@ def gerar_instrucao():
 
 
 def gerar_bat():
+    bat_content_install = """@echo off
+        echo =========================
+        echo   Instalando o python
+        echo =========================
+        winget install Python.Python.3.14
+        echo =========================
+        echo Python instalado
+        echo =========================
+        
+        echo =========================
+        echo   Instalando o anki
+        echo =========================
+	    winget install -e --id Anki.Anki
+        echo =========================
+        echo Anki instalado
+        echo =========================
+        
+        echo =========================
+        echo Instalando pacotes
+        echo =========================
+        pip install requests
+        echo =========================
+        echo Pacotes instalados
+        echo =========================
+        
+        echo.
+        echo Concluido!
+        pause"""
     bat_content = """@echo off
         echo =========================
         echo   LAPIS - Anki Sender
@@ -69,7 +108,7 @@ def gerar_bat():
         echo.
         echo Concluido!
         pause"""
-    return bat_content
+    return bat_content, bat_content_install
 
 
 def gerar_py():
@@ -104,7 +143,7 @@ def add_card(palavra, traducao, frase):
 
 def main():
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    caminho_txt = os.path.join(base_dir, "palavras.txt")
+    caminho_txt = os.path.join(base_dir, "frases.txt")
 
     if not os.path.exists(caminho_txt):
         print("Arquivo palavras.txt não encontrado!")

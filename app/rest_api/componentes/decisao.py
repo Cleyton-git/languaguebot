@@ -40,9 +40,9 @@ def dec(tele_id, req):
             data = date.today()
             
             if user.streak == 0:
-                zip_buffer = criar_zip(frases_user, incluir_instrucao = True)
+                zip_buffer = criar_zip(frases_user, incluir_extras =  True)
             else:
-                zip_buffer = criar_zip(frases_user, incluir_instrucao = False)
+                zip_buffer = criar_zip(frases_user, incluir_extras =  False)
             requests.post(f"https://api.telegram.org/bot8249452727:AAExS5DziVnWEUy2kXO-pwFZ5nmhiCt2aBs/sendDocument", 
                             data={"chat_id": user.telegram_id}, 
                             files={"document": (f"pacote{data.day}-{data.month}-{data.year}.zip", zip_buffer)})
@@ -77,5 +77,5 @@ def dec(tele_id, req):
             ondoku_atual = 0   
         )
     else:
-        enviar_telegram.enviar_telegram(id=tele_id, msg="Você deve usar /ativar e seu código de ativação \nEX: /ativar 000", func="send_msg")
+        enviar_telegram.enviar_telegram(id=tele_id, msg="Você deve digitar /ativar e seu código\nEX: /ativar 000\nUse /keys para ver os códigos disponiveis", func="send_msg")
         
