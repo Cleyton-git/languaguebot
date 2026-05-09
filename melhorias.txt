@@ -1,0 +1,13 @@
+1 - Usar o Cron-JOB para fazer o bot rodar 24horas. FEITO
+
+2 - Usar o Cron-Job para enviar mensagens para o usuario antes dele estudar. FEITO
+
+3 - Aumentar o número de audios do ondoku
+
+4 - Adicionar um enviador de emails no bot, o usuario deve usar algo como /help ou /report e digitar oq precisa, isso vai m
+e enviar um email com a reclamação dele, e vai me notificar
+
+5 - Administrar alguma forma de eu conseguir pelo menos o nome do usuario, isso pode ser feito dps que o usuario usa /ativar
+e seu código
+
+6 - Integrar o chat-gpt com o bot, para as frases não passarem se n tiverem sentido

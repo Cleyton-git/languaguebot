@@ -13,6 +13,7 @@ class Usuario(models.Model):
     streak = models.IntegerField(default=0)
     tela_atual = models.TextField(default="deslogado")
     proximo_estudo = models.DateTimeField(null=True, blank=True)
+    reminder_user = models.IntegerField(null=True, blank=True)
     
     def __str__(self):
         return f"{self.telegram_id}"
