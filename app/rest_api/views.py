@@ -5,6 +5,10 @@ from .componentes import decisao
 from .models import Id
 from .componentes import enviar_telegram
 
+@api_view(["GET"])
+def health(request):
+    return Response(status=status.HTTP_200_OK)
+
 @api_view(["POST"])
 def chatbot_telegram(request):
     tele_id = request.data['message']['chat']['id'] # pega o id
