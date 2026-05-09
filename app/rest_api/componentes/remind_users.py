@@ -5,6 +5,8 @@ from . import enviar_telegram
 def Func_remind_users():
     usuarios = Usuario.objects.all()
     for c in usuarios:
+        if not c.proximo_estudo:
+            continue
         c.reminder_user -= 15
         c.save() 
         if 0 < c.reminder_user <= 15:
