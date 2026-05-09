@@ -7,9 +7,9 @@ def Func_remind_users():
     for c in usuarios:
         if not c.proximo_estudo:
             continue
-        c.reminder_user -= 15
+        c.reminder_minutes -= 15
         c.save() 
-        if 0 < c.reminder_user <= 15:
+        if 0 < c.reminder_minutes <= 15:
             hora_atual = timezone.localtime()
             tempo_falta = timezone.localtime(c.proximo_estudo)
             diferenca = (tempo_falta - hora_atual)
@@ -21,7 +21,7 @@ def Func_remind_users():
                                                                     f"Bora estudar um pouco de inglês hoje? 🔥"
                                                                     ), func="send_msg")
             
-        elif c.reminder_user == 0: 
+        elif c.reminder_minutes == 0: 
             enviar_telegram.enviar_telegram(id=c.telegram_id, msg=(
                                                                     "🚨 Opa mano… você esqueceu de estudar hoje? 👀\n"
                                                                     "\n"
@@ -29,7 +29,7 @@ def Func_remind_users():
                                                                     "\n"
                                                                     "Vai lá estudar só um pouquinho."
                                                                     ), func="send_msg")
-            c.reminder_user = 1440 
+            c.reminder_minutes = 1440 
             c.save()
         else:
             pass
