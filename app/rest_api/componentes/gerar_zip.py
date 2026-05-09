@@ -47,7 +47,7 @@ def gerar_instrucao():
         "2. Abra o Lapis.apkg, double click e importe o deck\n"
         "3. Instale o anki connect (ctrl+shift+a/obter extensões, coloque esse código -> 2055492159 e reinicie o anki)\n"
         "4. Apartir daqui você ja pode excluir o instalar_dependencias.bat e o Lapis.apkg\n"
-        "5. Clique no enviar_anki\n"
+        "5. Clique no enviar_anki (tenha certeza que o anki esta aberto sempre que usar esse .bat)\n"
         "6. Crie uma pasta chamada (data atual ou a maneira que você quiser) e coloque o frases.txt\n"
         "7. REPITA O PROCESSO DO 5 E 6 TODOS OS DIAS\n"
         "8. OBS: NUNCA apague o add_card e o enviar_anki\n"
