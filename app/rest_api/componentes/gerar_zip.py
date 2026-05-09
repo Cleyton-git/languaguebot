@@ -51,7 +51,7 @@ def gerar_instrucao():
         "6. Crie uma pasta chamada (data atual ou a maneira que você quiser) e coloque o frases.txt\n"
         "7. REPITA O PROCESSO DO 5 E 6 TODOS OS DIAS\n"
         "8. OBS: NUNCA apague o add_card e o enviar_anki\n"
-        "9. Se quiser, pode abaixar o leia-me.txt tbm"
+        "9. Se quiser, pode abaixar o leia-me.txt tbm\n"
         "\nPasso a passo para os proximos dias:\n"
         "1.Faça as tarefas no telegram\n"
         "2.Extraia os arquivos nessa pasta\n"
