@@ -4,8 +4,10 @@ from rest_framework import status
 from .componentes import decisao
 from .models import Id
 from .componentes import enviar_telegram
+from django.views.decorators.csrf import csrf_exempt
 
-@api_view(["GET"])
+
+@csrf_exempt
 def health(request):
     return Response(status=status.HTTP_200_OK)
 
