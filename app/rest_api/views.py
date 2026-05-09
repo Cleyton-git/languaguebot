@@ -5,11 +5,13 @@ from .componentes import decisao
 from .models import Id
 from .componentes import enviar_telegram
 from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+
 
 
 @csrf_exempt
 def health(request):
-    return Response(status=status.HTTP_200_OK)
+    return HttpResponse("OK", status=200)
 
 @api_view(["POST"])
 def chatbot_telegram(request):
