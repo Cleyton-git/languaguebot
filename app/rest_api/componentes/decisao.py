@@ -6,6 +6,8 @@ from django.utils import timezone
 import requests
 from .gerar_zip import criar_zip
 from . import send_bugs
+import threading
+
 
 def dec(tele_id, req):
     user = Usuario.objects.filter(telegram_id=tele_id).first()
@@ -14,7 +16,12 @@ def dec(tele_id, req):
             if len(req) == 5:
                 print("Digite algo além de só /help")
                 return
-            send_bugs.Func_send_bugs(tele_id, req[5:])
+            threading.Thread(
+                target=send_bugs.Func_send_bugs,
+                args=(tele_id, req[5:]),
+                daemon=True
+            ).start()
+            #send_bugs.Func_send_bugs(tele_id, req[5:])
             return
         
         if user.tela_atual == "logado":
