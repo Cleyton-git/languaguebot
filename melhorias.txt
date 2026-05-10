@@ -5,7 +5,7 @@
 3 - Aumentar o número de audios do ondoku
 
 4 - Adicionar um enviador de emails no bot, o usuario deve usar algo como /help ou /report e digitar oq precisa, isso vai m
-e enviar um email com a reclamação dele, e vai me notificar. FEITO
+e enviar um email com a reclamação dele, e vai me notificar. FEITO (problema que o render free n deixa isso rodar, so funciona no local)
 
 5 - Administrar alguma forma de eu conseguir pelo menos o nome do usuario, isso pode ser feito dps que o usuario usa /ativar
 e seu código
