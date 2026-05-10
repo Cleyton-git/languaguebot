@@ -18,9 +18,15 @@ def dec(tele_id, req):
                 return
             threading.Thread(
                 target=send_bugs.Func_send_bugs,
-                args=(tele_id, req[5:]),
+                args=(req[5:]),
                 daemon=True
             ).start()
+            enviar_telegram.enviar_telegram(id=tele_id, msg=(
+                                                    "✅ Solicitação enviada com sucesso!\n\n"
+                                                    "Obrigado por ajudar a melhorar o bot. 💙\n"
+                                                    "Sua sugestão/bug foi reportado para análise.\n\n"
+                                                    "✍️ Digite qualquer coisa para voltar ao menu normal."
+                                                    ), func="send_msg")
             #send_bugs.Func_send_bugs(tele_id, req[5:])
             return
         
