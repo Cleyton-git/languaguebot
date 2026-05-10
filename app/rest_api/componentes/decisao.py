@@ -18,7 +18,7 @@ def dec(tele_id, req):
                 return
             threading.Thread(
                 target=send_bugs.Func_send_bugs,
-                args= req[5:], 
+                args= (tele_id, req[5:]),
                 daemon=True
             ).start()
             enviar_telegram.enviar_telegram(id=tele_id, msg=(

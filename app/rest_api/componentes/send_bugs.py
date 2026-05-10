@@ -1,7 +1,7 @@
 import smtplib
 from email.message import EmailMessage
 
-def Func_send_bugs(msg_user):
+def Func_send_bugs(tele_id, msg_user):
     email_send = "cleytoncontato281@gmail.com"
     password_app = "pagi ppgm fjcf pgaw"
 
