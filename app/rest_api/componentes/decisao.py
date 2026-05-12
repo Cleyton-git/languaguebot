@@ -1,13 +1,11 @@
 from . import cadastro, telas
 from ..models import Usuario, FraseUsuario, UsuarioOndoku
 from . import enviar_telegram, backend_tela_jornada
-from datetime import timedelta, date
+from datetime import timedelta
 from django.utils import timezone
-import requests
 from .gerar_zip import criar_zip
 from . import send_bugs
 import threading
-
 
 def dec(tele_id, req):
     user = Usuario.objects.filter(telegram_id=tele_id).first()
@@ -18,7 +16,7 @@ def dec(tele_id, req):
                 return
             threading.Thread(
                 target=send_bugs.Func_send_bugs,
-                args= (tele_id, req[5:]),
+                args=(tele_id, req[5:]),
                 daemon=True
             ).start()
             enviar_telegram.enviar_telegram(id=tele_id, msg=(
@@ -30,10 +28,31 @@ def dec(tele_id, req):
             #send_bugs.Func_send_bugs(tele_id, req[5:])
             return
         
-        if user.tela_atual == "logado":
-            if req == "/stats":
-                telas.Tela_stats(user)
-            elif req == "/jornada":
+        if user.tela_atual == "cadastro":
+            enviar_telegram.enviar_telegram(id=tele_id, msg=("👋 Bem-vindo ao bot!\n\n"
+                                            "Aqui você segue um ciclo completo para aprender inglês todos os dias:\n\n"
+                                            "📚 1. Vocabulário + Escrita\n"
+                                            "Você recebe palavras novas e cria suas próprias frases com elas.\n\n"
+                                            "🧠 2. Fixação ativa\n"
+                                            "Nada de só ler — você pratica escrevendo e usando o inglês de verdade.\n\n"
+                                            "🎧 3. Ondoku (Shadowing)\n"
+                                            "Você treina com áudio em 3 etapas para destravar sua fala:\n"
+                                            "• Lê sozinho\n"
+                                            "• Lê junto com o áudio\n"
+                                            "• Lê novamente sem ajuda\n\n"
+                                            "📦 4. Revisão inteligente\n"
+                                            "No final, você recebe seu material do dia para revisar no Anki.\n\n"
+                                            "🌍 5. Imersão\n"
+                                            "Depois disso, o bot recomenda 1h de conteúdo em inglês para consolidar tudo.\n\n"
+                                            "⏱️ Tudo isso em menos de 10 minutos.\n\n"
+                                            "🚀 Digite /jornada para começar\n"
+                                            "🛠️ /help para relatar bugs ou melhorias"), func="send_msg")
+            user.tela_atual = "logado"
+            user.nome_usuario = req 
+            user.save()
+        
+        elif user.tela_atual == "logado":
+            if req == "/jornada":
                 user.tela_atual = "jornada"
                 user.save()
                 telas.Tela_frases(user)
@@ -56,19 +75,19 @@ def dec(tele_id, req):
             for c in frases_user:
                 frases.append(c.frase)
             # BLOCO PARA ENVIARA AS FRASES PARA O GPT
-            data = date.today()
             
             if user.streak == 0:
-                zip_buffer = criar_zip(frases_user, incluir_extras =  True)
+                threading.Thread(
+                target=criar_zip,
+                args=(user, frases_user, True),
+                daemon=True
+                ).start()
             else:
-                zip_buffer = criar_zip(frases_user, incluir_extras =  False)
-            ### COISAS PARA MUDAR 1: PRODUÇÃO 2: LOCAL
-            requests.post(f"https://api.telegram.org/bot8249452727:AAExS5DziVnWEUy2kXO-pwFZ5nmhiCt2aBs/sendDocument", 
-                            data={"chat_id": user.telegram_id}, 
-                            files={"document": (f"pacote{data.day}-{data.month}-{data.year}.zip", zip_buffer)})
-            #requests.post(f"https://api.telegram.org/bot8507566279:AAGN5OQyN8dLhyc3bw8IovGMnfGtgaKpHAA/sendDocument", 
-            #                data={"chat_id": user.telegram_id}, 
-            #                files={"document": (f"pacote{data.day}-{data.month}-{data.year}.zip", zip_buffer)})
+                threading.Thread(
+                target=criar_zip,
+                args=(user, frases_user, False),
+                daemon=True
+                ).start()
             
             FraseUsuario.objects.filter(usuario=user.telegram_id).delete()
             enviar_telegram.enviar_telegram(id=user.telegram_id, msg=f"Você já fez sua jornada hoje. Recomendo descansar e apenas consumir conteúdo em inglês por 1h.\nEspere até as {timezone.localtime(user.proximo_estudo).strftime("%H:%M")} de amanhã\n[ /iniciar ] - reinicia o ciclo (não recomendado)", func="send_msg")
@@ -97,9 +116,9 @@ def dec(tele_id, req):
         cadastro.cadastro_user(tele_id, req)
         user = Usuario.objects.filter(telegram_id=tele_id).first()
         UsuarioOndoku.objects.create(
-            usuario = user,
-            ondoku_atual = 0   
-        )
+                usuario = user,
+                ondoku_atual = 0   
+            )
     else:
         enviar_telegram.enviar_telegram(id=tele_id, msg="Você deve digitar /ativar e seu código\nEX: /ativar 000\nUse /keys para ver os códigos disponiveis", func="send_msg")
         

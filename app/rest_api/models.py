@@ -7,6 +7,7 @@ class Id(models.Model):
         return f"Id: {self.id}"
 
 class Usuario(models.Model):
+    nome_usuario = models.CharField(default="Cleyton")
     telegram_id = models.BigIntegerField(primary_key=True)
     palavra_inicial = models.IntegerField(default=0)
     palavra_atual = models.IntegerField(default=0)
@@ -16,7 +17,7 @@ class Usuario(models.Model):
     reminder_minutes = models.IntegerField(default=1440)
     
     def __str__(self):
-        return f"{self.telegram_id}"
+        return f"{self.nome_usuario}, {self.tela_atual}, {self.reminder_minutes}"
     
 class FraseUsuario(models.Model):
     usuario = models.ForeignKey("Usuario", on_delete=models.CASCADE)

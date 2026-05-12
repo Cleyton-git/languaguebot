@@ -1,6 +1,5 @@
 from . import enviar_telegram
 from .backend_tela_jornada import pegar_palavra
-from . import send_anki
 from ..models import Usuario, FraseUsuario
 from django.utils import timezone
 from deep_translator import GoogleTranslator
@@ -12,19 +11,14 @@ def Tela_incial(tele_id):
     porcentagem = round((palavras_user / 3600) * 100, 1)
     streak = user.streak
     enviar_telegram.enviar_telegram(
-    id=tele_id, msg=("👋 Bem-vindo!\n\n"
+    id=tele_id, msg=(f"👋 Bem-vindo! {user.nome_usuario}\n\n"
                      "📊 Seu progresso\n"
                      f"• Palavras aprendidas: {palavras_user} ({porcentagem}%)\n"
                      f"• Streak: {streak} dias 🔥\n\n"
                      "───────────────\n\n"
                      "🚀 O que você quer fazer agora?\n\n"
-                     "▶️ /jornada — Iniciar sua sessão de hoje\n"), func="send_msg",)
-
-def Tela_stats(dados_user):
-    tele_id = dados_user.telegram_id
-    palavras = dados_user.palavra_inicial
-    streak = dados_user.streak
-    enviar_telegram.enviar_telegram(id=tele_id, msg=f"{palavras} Palavras ja aprendidas\nVocê ja seguiu a rotina por {streak} dia", func="send_msg")
+                     "▶️ /jornada — Iniciar sua sessão de hoje\n"
+                     "🛠️ /help para relatar bugs ou melhorias"), func="send_msg",)
     
 def Tela_frases(user):
     tele_id = user.telegram_id
@@ -106,12 +100,6 @@ def Tela_ondoku(user, req, user_ondoku):
         else:
             enviar_telegram.enviar_telegram(id=id, msg=f"Digite /ok", func="send_msg")
     return
-
-#def Tela_anki(user, req):
-#    model = send_anki.create_model()
-#    deck = send_anki.create_deck()
-#    dec = send_anki.create_apkg(model, deck, user.telegram_id)
-        
 
 def Tela_imersao(user):
     return

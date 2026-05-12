@@ -1,0 +1,6 @@
+.venv/
+versions/
+melhorias.txt
+.env
+__pychacache__/
+*.pyc

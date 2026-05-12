@@ -1,45 +1,49 @@
-import io
 from deep_translator import GoogleTranslator
 import zipfile
 import os
+from . import enviar_telegram
+import tempfile
 
-def criar_zip(frases, incluir_extras):
-    zip_buffer = io.BytesIO()
-    
-    palavras_txt = gerar_txt_frases(frases)
+def criar_zip(user, frases, incluir_extras):
 
-    with zipfile.ZipFile(zip_buffer, 'w') as zipf:
-        zipf.writestr("frases.txt", palavras_txt.getvalue())
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".zip") as temp_zip:
+        zip_path = temp_zip.name
+
+    with zipfile.ZipFile(zip_path, 'w', compression=zipfile.ZIP_STORED) as zipf:
+        palavras_txt = gerar_txt_frases(frases)
+
+        zipf.writestr("frases.txt", palavras_txt)
 
         if incluir_extras:
             bat_content, bat_content_dependencias = gerar_bat()
             py_content = gerar_py()
             lapis_apkg = os.path.join(os.path.dirname(__file__), "Lapis.apkg")
-            
-            zipf.writestr("leia-me.txt", gerar_instrucao().getvalue())
+
+            zipf.writestr("leia-me.txt", gerar_instrucao())            
             zipf.writestr("enviar_anki.bat", bat_content)
             zipf.writestr("instalar_dependencias.bat", bat_content_dependencias)
             zipf.writestr("add_card.py", py_content)
+
             zipf.write(lapis_apkg, arcname="Lapis.apkg")
 
-    zip_buffer.seek(0)
-    return zip_buffer
+    with open(zip_path, "rb") as file:
+        enviar_telegram.enviar_telegram(id=user.telegram_id, msg=(
+                                                            "📦 Sua pasta está sendo preparada...\n\n"
+                                                            "Isso pode levar alguns segundos dependendo da quantidade de frases."),
+                                                            func="send_msg")
+        enviar_telegram.enviar_telegram(id=user.telegram_id, func="send_zip", file=file)
+    os.remove(zip_path)
 
 def gerar_txt_frases(frases_user):
-    buffer = io.BytesIO()
-    
     conteudo = ""
+
     for f in frases_user:
         traducao = GoogleTranslator(source='en', target='pt').translate(f.palavra)
         conteudo += f"{f.palavra} - {traducao} | {f.frase}\n"
 
-    buffer.write(conteudo.encode("utf-8"))
-    buffer.seek(0)
-    return buffer
+    return conteudo
 
 def gerar_instrucao():
-    buffer = io.BytesIO()
-
     texto = (
         "Como usar o sistema:\n\n"
         "Desktop:\n"
@@ -63,10 +67,8 @@ def gerar_instrucao():
         "\nAndroid:\n"
         "AINDA EM CONSTRUÇÃO\n"
     )
-    buffer.write(texto.encode("utf-8"))
-    buffer.seek(0)
 
-    return buffer
+    return texto
 
 
 def gerar_bat():

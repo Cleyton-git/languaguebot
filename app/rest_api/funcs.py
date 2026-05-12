@@ -13,7 +13,7 @@ def word_trate(word, id):
 
 def is_word(word, id):
     if word.isalpha() == False:
-        enviar_telegram(id, msg=f"A palavra {word} não é compativel, a palavra não deve ter numeros, simbolos ou espaços", func="send_msg")
+        (id, msg=f"A palavra {word} não é compativel, a palavra não deve ter numeros, simbolos ou espaços", func="send_msg")
         return False
     return word
 
