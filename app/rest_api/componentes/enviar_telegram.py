@@ -3,10 +3,9 @@ from dotenv import load_dotenv
 import os
 from datetime import date
 
-load_dotenv()
-
 TOKEN_LOCAL = os.getenv("TOKEN_TELEGRAM_LOCAL")
 TOKEN_PROD = os.getenv("TOKEN_TELEGRAM_PROD")
+print("TOKEN_PROD -> ", TOKEN_PROD)
 
 ### COISAS PARA MUDAR 
 def enviar_telegram(id, msg_id="", msg="", func="", file=""):
