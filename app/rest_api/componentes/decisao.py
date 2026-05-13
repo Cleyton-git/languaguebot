@@ -94,7 +94,7 @@ def dec(tele_id, req):
             user.tela_atual = "descanso"
             user.proximo_estudo = timezone.now() + timedelta(hours=24)
             
-            user.reminder_user = 1440
+            user.reminder_minutes = 1440
             user.reminder_jornada = -1
             
             user.palavra_atual = 0
