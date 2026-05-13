@@ -7,7 +7,7 @@ class Id(models.Model):
         return f"Id: {self.id}"
 
 class Usuario(models.Model):
-    nome_usuario = models.CharField(default="Cleyton")
+    nome_usuario = models.CharField(default="Cleyton", max_length= 60)
     telegram_id = models.BigIntegerField(primary_key=True)
     palavra_inicial = models.IntegerField(default=0)
     palavra_atual = models.IntegerField(default=0)
@@ -15,6 +15,7 @@ class Usuario(models.Model):
     tela_atual = models.TextField(default="deslogado")
     proximo_estudo = models.DateTimeField(null=True, blank=True)
     reminder_minutes = models.IntegerField(default=1440)
+    reminder_jornada = models.IntegerField(default=-1)
     
     def __str__(self):
         return f"{self.nome_usuario}, {self.tela_atual}, {self.reminder_minutes}"

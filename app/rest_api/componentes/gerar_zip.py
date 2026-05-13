@@ -3,6 +3,7 @@ import zipfile
 import os
 from . import enviar_telegram
 import tempfile
+from django.utils import timezone
 
 def criar_zip(user, frases, incluir_extras):
 
@@ -25,14 +26,16 @@ def criar_zip(user, frases, incluir_extras):
             zipf.writestr("add_card.py", py_content)
 
             zipf.write(lapis_apkg, arcname="Lapis.apkg")
+            
+    enviar_telegram.enviar_telegram(id=user.telegram_id, msg=("📦 Sua pasta está sendo preparada...\n\n""Isso pode levar alguns segundos dependendo da quantidade de frases."),
+                                                            func="send_msg")
 
     with open(zip_path, "rb") as file:
-        enviar_telegram.enviar_telegram(id=user.telegram_id, msg=(
-                                                            "📦 Sua pasta está sendo preparada...\n\n"
-                                                            "Isso pode levar alguns segundos dependendo da quantidade de frases."),
-                                                            func="send_msg")
         enviar_telegram.enviar_telegram(id=user.telegram_id, func="send_zip", file=file)
     os.remove(zip_path)
+    
+    enviar_telegram.enviar_telegram(id=user.telegram_id, msg=f"Você já fez sua jornada hoje. Recomendo descansar e apenas consumir conteúdo em inglês por 1h.\nEspere até as {timezone.localtime(user.proximo_estudo).strftime("%H:%M")} de amanhã\n[ /iniciar ] - reinicia o ciclo (não recomendado)", func="send_msg")
+    
 
 def gerar_txt_frases(frases_user):
     conteudo = ""

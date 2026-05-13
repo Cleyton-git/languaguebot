@@ -12,7 +12,7 @@ def dec(tele_id, req):
     if user:
         if req[:5] == "/help":
             if len(req) == 5:
-                print("Digite algo além de só /help")
+                enviar_telegram.enviar_telegram(id=tele_id, msg="Digite algo além de só '/help'", func="send_msg")
                 return
             threading.Thread(
                 target=send_bugs.Func_send_bugs,
@@ -54,6 +54,7 @@ def dec(tele_id, req):
         elif user.tela_atual == "logado":
             if req == "/jornada":
                 user.tela_atual = "jornada"
+                user.reminder_jornada = 0
                 user.save()
                 telas.Tela_frases(user)
             else:
@@ -88,12 +89,15 @@ def dec(tele_id, req):
                 args=(user, frases_user, False),
                 daemon=True
                 ).start()
-            
+                
             FraseUsuario.objects.filter(usuario=user.telegram_id).delete()
-            enviar_telegram.enviar_telegram(id=user.telegram_id, msg=f"Você já fez sua jornada hoje. Recomendo descansar e apenas consumir conteúdo em inglês por 1h.\nEspere até as {timezone.localtime(user.proximo_estudo).strftime("%H:%M")} de amanhã\n[ /iniciar ] - reinicia o ciclo (não recomendado)", func="send_msg")
             user.tela_atual = "descanso"
             user.proximo_estudo = timezone.now() + timedelta(hours=24)
+            
             user.reminder_user = 1440
+            user.reminder_jornada = -1
+            
+            user.palavra_atual = 0
             user.streak += 1
             user.save()
             return

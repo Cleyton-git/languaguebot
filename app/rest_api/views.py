@@ -14,6 +14,12 @@ def Reminder_users(request):
     remind_users.Func_remind_users()
     return HttpResponse("OK", status=200)
 
+@csrf_exempt
+def Reminder_jornada(request):
+    remind_users.Func_remind_jornada()
+    return HttpResponse("OK", status=200)
+    pass
+
 @api_view(["POST"])
 def chatbot_telegram(request):
     tele_id = request.data['message']['chat']['id'] # pega o id
