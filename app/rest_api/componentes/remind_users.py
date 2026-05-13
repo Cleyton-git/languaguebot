@@ -88,12 +88,10 @@ def Func_remind_jornada():
                 frases_usuario.delete()
                 
                 c.reminder_jornada = -1
+                c.reminder_minutes = 1440
                 c.tela_atual = "logado"
                 
                 c.palavra_atual = 0
                 c. streak = 0
                 
                 c.save()
-                
-                    
-    
