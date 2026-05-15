@@ -7,7 +7,7 @@ class Id(models.Model):
         return f"Id: {self.id}"
 
 class Usuario(models.Model):
-    nome_usuario = models.CharField(default="Cleyton", max_length= 60)
+    nome_usuario = models.CharField(default="Cleyton")
     telegram_id = models.BigIntegerField(primary_key=True)
     palavra_inicial = models.IntegerField(default=0)
     palavra_atual = models.IntegerField(default=0)

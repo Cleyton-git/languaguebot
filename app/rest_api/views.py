@@ -18,7 +18,6 @@ def Reminder_users(request):
 def Reminder_jornada(request):
     remind_users.Func_remind_jornada()
     return HttpResponse("OK", status=200)
-    pass
 
 @api_view(["POST"])
 def chatbot_telegram(request):

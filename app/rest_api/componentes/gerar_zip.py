@@ -26,9 +26,6 @@ def criar_zip(user, frases, incluir_extras):
             zipf.writestr("add_card.py", py_content)
 
             zipf.write(lapis_apkg, arcname="Lapis.apkg")
-            
-    enviar_telegram.enviar_telegram(id=user.telegram_id, msg=("📦 Sua pasta está sendo preparada...\n\n""Isso pode levar alguns segundos dependendo da quantidade de frases."),
-                                                            func="send_msg")
 
     with open(zip_path, "rb") as file:
         enviar_telegram.enviar_telegram(id=user.telegram_id, func="send_zip", file=file)

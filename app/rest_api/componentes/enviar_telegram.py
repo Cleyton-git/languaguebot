@@ -8,8 +8,6 @@ load_dotenv()
 TOKEN_LOCAL = os.getenv("TOKEN_TELEGRAM_LOCAL")
 TOKEN_PROD = os.getenv("TOKEN_TELEGRAM_PROD")
 
-
-### COISAS PARA MUDAR 
 def enviar_telegram(id, msg_id="", msg="", func="", file=""):
     if func == "send_msg":
         

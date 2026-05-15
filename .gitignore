@@ -4,3 +4,4 @@ melhorias.txt
 .env
 __pychacache__/
 *.pyc
+.gitignore

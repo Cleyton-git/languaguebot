@@ -1,11 +1,13 @@
 from . import cadastro, telas
 from ..models import Usuario, FraseUsuario, UsuarioOndoku
-from . import enviar_telegram, backend_tela_jornada
+from . import enviar_telegram, backend_tela_jornada, integracao_ia
 from datetime import timedelta
 from django.utils import timezone
 from .gerar_zip import criar_zip
 from . import send_bugs
 import threading
+import os
+import json
 
 def dec(tele_id, req):
     user = Usuario.objects.filter(telegram_id=tele_id).first()
@@ -70,37 +72,15 @@ def dec(tele_id, req):
             )
             telas.Tela_ondoku(user, req, user_ondoku)
             
-        elif user.tela_atual == "anki":
-            frases_user = FraseUsuario.objects.filter(usuario=user.telegram_id).all()
-            frases = []
-            for c in frases_user:
-                frases.append(c.frase)
-            # BLOCO PARA ENVIARA AS FRASES PARA O GPT
+        elif user.tela_atual == "final":
+            frases_user = FraseUsuario.objects.filter(usuario=tele_id).all()
             
-            if user.streak == 0:
-                threading.Thread(
-                target=criar_zip,
-                args=(user, frases_user, True),
+            enviar_telegram.enviar_telegram(id=tele_id, msg="🤖 O bot vai analisar suas frases e verificar se elas estão corretas.\n\nIsso pode levar alguns segundos ⏳", func="send_msg")
+            threading.Thread(
+                target=integracao_ia.Func_integracao_ia,
+                args=(user, frases_user),
                 daemon=True
-                ).start()
-            else:
-                threading.Thread(
-                target=criar_zip,
-                args=(user, frases_user, False),
-                daemon=True
-                ).start()
-                
-            FraseUsuario.objects.filter(usuario=user.telegram_id).delete()
-            user.tela_atual = "descanso"
-            user.proximo_estudo = timezone.now() + timedelta(hours=24)
-            
-            user.reminder_minutes = 1440
-            user.reminder_jornada = -1
-            
-            user.palavra_atual = 0
-            user.streak += 1
-            user.save()
-            return
+            ).start()
             
         elif user.tela_atual == "descanso":
             if req == "/iniciar":

@@ -96,7 +96,7 @@ def Tela_ondoku(user, req, user_ondoku):
         elif req.lower() == "/ok" and ondoku_atual == 3:
             user_ondoku.ondoku_atual = 0
             user_ondoku.save()
-            user.tela_atual = "anki"
+            user.tela_atual = "final"
             user.save()
         else:
             enviar_telegram.enviar_telegram(id=id, msg=f"Digite /ok", func="send_msg")
