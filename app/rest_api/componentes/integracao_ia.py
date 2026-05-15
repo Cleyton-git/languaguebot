@@ -130,8 +130,7 @@ FORMATO OBRIGATÓRIO:
                                             f"📌 Status:{c["status"]}\n"
                                             f"💡 Explicação:{c["explicacao"]}\n"
                                             f"✍️ Correção:{c["correcao"]}\n", func="send_msg")
-            frase = FraseUsuario.objects.get(frase=c["frase_original"])
-            if c["status"] == "❌ Errada":
+                frase = FraseUsuario.objects.get(frase=c["frase_original"])
                 frase.frase = c['correcao']
                 frase.save()
         enviar_telegram.enviar_telegram(id=user.telegram_id, msg="🤖 Suas frases foram analisadas e corrigidas com sucesso!", func="send_msg")
