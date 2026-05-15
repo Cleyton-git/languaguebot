@@ -3,8 +3,7 @@ import json
 import google.generativeai as genai
 from . import enviar_telegram, gerar_zip
 import threading
-from django.utils import timezone
-from datetime import timedelta
+
 import os
 from dotenv import load_dotenv
 import time
@@ -163,16 +162,4 @@ FORMATO OBRIGATÓRIO:
         args=(user, frases_user, False),
         daemon=True
         ).start()
-        
     return
-    FraseUsuario.objects.filter(usuario=user.telegram_id).delete()
-    user.tela_atual = "descanso"
-    user.proximo_estudo = timezone.now() + timedelta(hours=24)
-
-    user.reminder_minutes = 1440
-    user.reminder_jornada = -1
-
-    user.palavra_atual = 0
-    user.streak += 1
-    user.save()
-

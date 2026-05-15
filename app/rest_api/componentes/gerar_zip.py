@@ -4,8 +4,11 @@ import os
 from . import enviar_telegram
 import tempfile
 from django.utils import timezone
+from datetime import timedelta
+from ..models import FraseUsuario
 
 def criar_zip(user, frases, incluir_extras):
+    
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".zip") as temp_zip:
         zip_path = temp_zip.name
@@ -32,6 +35,16 @@ def criar_zip(user, frases, incluir_extras):
     os.remove(zip_path)
     
     enviar_telegram.enviar_telegram(id=user.telegram_id, msg=f"Você já fez sua jornada hoje. Recomendo descansar e apenas consumir conteúdo em inglês por 1h.\nEspere até as {timezone.localtime(user.proximo_estudo).strftime("%H:%M")} de amanhã\n[ /iniciar ] - reinicia o ciclo (não recomendado)", func="send_msg")
+    FraseUsuario.objects.filter(usuario=user.telegram_id).delete()
+    user.tela_atual = "descanso"
+    user.proximo_estudo = timezone.now() + timedelta(hours=24)
+
+    user.reminder_minutes = 1440
+    user.reminder_jornada = -1
+
+    user.palavra_atual = 0
+    user.streak += 1
+    user.save()
     
 
 def gerar_txt_frases(frases_user):
