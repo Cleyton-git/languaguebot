@@ -143,8 +143,10 @@ FORMATO OBRIGATÓRIO:
                                             f"✍️ Correção:{c["correcao"]}\n", func="send_msg")
                 frase = FraseUsuario.objects.get(frase=c["frase_original"])
                 frase.frase = c['correcao']
+                print(frase)
                 frase.save()
         enviar_telegram.enviar_telegram(id=user.telegram_id, msg="🤖 Suas frases foram analisadas e corrigidas com sucesso!", func="send_msg")
+    return
 
     enviar_telegram.enviar_telegram(id=user.telegram_id, msg=("📦 Sua pasta está sendo preparada...\n\n""Isso pode levar alguns segundos dependendo da quantidade de frases."),
                                                             func="send_msg")
