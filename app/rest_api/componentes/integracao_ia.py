@@ -16,7 +16,6 @@ load_dotenv()
 TOKEN_IA = os.getenv("TOKEN_API")
 
 def Func_integracao_ia(user, frases_user):
-    print("ENTEI AQUi")
     frases = []
     for c in frases_user:
         frases.append(c.frase)
@@ -93,6 +92,11 @@ FORMATO OBRIGATÓRIO:
         )
         time.sleep(60)
         try:
+            enviar_telegram.enviar_telegram(
+                id=user.telegram_id,
+                msg="⏳ Tentando denovo...",
+                func="send_msg"
+            )
             response = model.generate_content(prompt, generation_config={ "temperature": 0})
 
         except Exception:
@@ -103,21 +107,28 @@ FORMATO OBRIGATÓRIO:
             )
             return
     response = response.text
-    matches = re.findall(r'\{[\s\S]*\}', response)
-    json_limpo = matches[-1]
-    print(type(json_limpo))
+    inicio = response.rfind('{\n    "todas_certas"')
+
+    if inicio == -1:
+        inicio = response.rfind('{"todas_certas"')
+
+    json_limpo = response[inicio:]
     print(json_limpo)
     try:
         data = json.loads(json_limpo)
-    except Exception:
-        print("A ia teve problemas processando... Reprocessando")
+    except Exception as e:
+        print(f"LOG -> ERRO_IA {e}")
+        enviar_telegram.enviar_telegram(id=user.telegram_id, msg="A ia teve problemas processando... reprocessando", func="send_msg")
         response = model.generate_content(prompt, generation_config={ "temperature": 0})
         response = response.text
         matches = re.findall(r'\{[\s\S]*\}', response)
         json_limpo = matches[-1]
-        data = json.loads(json_limpo)
-        
-        
+        try:
+            data = json.loads(json_limpo)
+        except Exception as e:
+            print(f"LOG -> ERRO_IA {e}")
+            enviar_telegram.enviar_telegram(id=user.telegram_id, msg="A ia teve problemas processando suas frases, espere 30 segundos e envie qualquer coisa", func="send_msg")
+            return
     
     if data['todas_certas']:
         enviar_telegram.enviar_telegram(id=user.telegram_id, msg="🏆 Detectei que você acertou TODAS as frases!\n\nParabéns, mandou muito bem 😎🔥", func="send_msg")
@@ -130,7 +141,8 @@ FORMATO OBRIGATÓRIO:
                                             f"📌 Status:{c["status"]}\n"
                                             f"💡 Explicação:{c["explicacao"]}\n"
                                             f"✍️ Correção:{c["correcao"]}\n", func="send_msg")
-                frase = FraseUsuario.objects.get(frase=c["frase_original"])
+            frase = FraseUsuario.objects.get(frase=c["frase_original"])
+            if "Errada" in c["status"]:
                 frase.frase = c['correcao']
                 frase.save()
         enviar_telegram.enviar_telegram(id=user.telegram_id, msg="🤖 Suas frases foram analisadas e corrigidas com sucesso!", func="send_msg")
