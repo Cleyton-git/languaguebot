@@ -146,10 +146,11 @@ FORMATO OBRIGATÓRIO:
                 print(frase)
                 frase.save()
         enviar_telegram.enviar_telegram(id=user.telegram_id, msg="🤖 Suas frases foram analisadas e corrigidas com sucesso!", func="send_msg")
-    return
 
     enviar_telegram.enviar_telegram(id=user.telegram_id, msg=("📦 Sua pasta está sendo preparada...\n\n""Isso pode levar alguns segundos dependendo da quantidade de frases."),
                                                             func="send_msg")
+    
+    frases_user = FraseUsuario.objects.filter(usuario=user.telegram_id).all()
     if user.streak == 0:
         threading.Thread(
         target=gerar_zip.criar_zip,
