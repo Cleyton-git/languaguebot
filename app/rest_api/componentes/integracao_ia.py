@@ -90,7 +90,7 @@ FORMATO OBRIGATÓRIO:
             msg="⏳ Você entrou em uma fila de espera. Vamos tentar novamente em 1 minuto.",
             func="send_msg"
         )
-        time.sleep(60)
+        #time.sleep(60)
         try:
             enviar_telegram.enviar_telegram(
                 id=user.telegram_id,
@@ -149,8 +149,8 @@ FORMATO OBRIGATÓRIO:
 
     enviar_telegram.enviar_telegram(id=user.telegram_id, msg=("📦 Sua pasta está sendo preparada...\n\n""Isso pode levar alguns segundos dependendo da quantidade de frases."),
                                                             func="send_msg")
-    
-    frases_user = FraseUsuario.objects.filter(usuario=user.telegram_id).all()
+    frases_user = FraseUsuario.objects.filter(usuario=user).all()
+    print(frases_user)
     if user.streak == 0:
         threading.Thread(
         target=gerar_zip.criar_zip,
