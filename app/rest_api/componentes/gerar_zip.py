@@ -35,11 +35,18 @@ def criar_zip(user, frases, incluir_extras):
     
 
 def gerar_txt_frases(frases_user):
+    print("CRIANDO TXT")
     conteudo = ""
 
     for f in frases_user:
+        print("ENTROU")
+        print(f.palavra)
+        print(f.frase)
         traducao = GoogleTranslator(source='en', target='pt').translate(f.palavra)
         conteudo += f"{f.palavra} - {traducao} | {f.frase}\n"
+        print("Escreveu")
+    
+    print("RETORNOU")
 
     return conteudo
 
