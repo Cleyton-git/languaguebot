@@ -164,6 +164,7 @@ FORMATO OBRIGATÓRIO:
         daemon=True
         ).start()
         
+    return
     FraseUsuario.objects.filter(usuario=user.telegram_id).delete()
     user.tela_atual = "descanso"
     user.proximo_estudo = timezone.now() + timedelta(hours=24)
