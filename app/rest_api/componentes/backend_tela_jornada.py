@@ -21,10 +21,36 @@ def processar_palavra(user, req):
     if user.palavra_atual == 10:
         user.palavra_inicial += 10
         user.palavra_atual = 0
-        user.tela_atual = "ondoku"
+        user.tela_atual = "ask ondoku"
         user.save()
-        user_ondoku = UsuarioOndoku.objects.filter(usuario=user.telegram_id).first()
-        telas.Tela_ondoku(user, req, user_ondoku)
+        if user.streak == 0:
+            if user.streak == 0:
+                enviar_telegram.enviar_telegram(id=user.telegram_id, msg=
+                                        "🎧 Você entrou no treino de Ondoku!\n\n"
+
+                                        "Como essa é sua primeira vez aqui, deixa eu te explicar rapidinho.\n\n"
+
+                                        "📈 A cada dia que você estudar, você ganha +1 level_ondoku.\n"
+                                        "O level máximo é 30, e a cada nível você desbloqueia novos áudios para treinar.\n\n"
+
+                                        "🔓 Conforme você evolui, novos Ondokus vão sendo liberados.\n"
+                                        "Isso significa que você terá conteúdo novo constantemente durante sua jornada.\n\n"
+
+                                        "🔥 Se você chegar até o level 30, serão 30 dias seguidos praticando inglês.\n"
+                                        "E sinceramente? Se você fizer isso direito, teu inglês vai melhorar MUITO.", func="send_msg")
+        enviar_telegram.enviar_telegram(id=user.telegram_id, msg=f"""🎧 Escolha um Ondoku conforme seu nível:
+
+{"✅ Level 1: Giving personal information" if user.level_ondoku >= 0 else "🔒 Level 1: Giving personal information (Desbloqueia no level 1)"}
+{"✅ Level 2: Describing people" if user.level_ondoku >= 5 else "🔒 Level 2: Describing people (Desbloqueia no level 5)"}
+{"✅ Level 3: Shopping for clothes" if user.level_ondoku >= 10 else "🔒 Level 3: Shopping for clothes (Desbloqueia no level 10)"}
+{"✅ Level 4: Ordering food in a café" if user.level_ondoku >= 15 else "🔒 Level 4: Ordering food in a café (Desbloqueia no level 15)"}
+{"✅ Level 5: Tour of London" if user.level_ondoku >= 20 else "🔒 Level 5: Tour of London (Desbloqueia no level 20)"}
+{"✅ Level 6: Llamas" if user.level_ondoku >= 25 else "🔒 Level 6: Llamas (Desbloqueia no level 25)"}
+
+📈 Seu nível atual: {user.level_ondoku}
+Escolha entre 1 e 6""", func="send_msg")  
+        telas.Tela_ask_ondoku(user, req)
+        
         return
     palavra = pegar_palavra(user)
     palavra_correta = palavra[0]

@@ -8,15 +8,13 @@ load_dotenv()
 TOKEN_LOCAL = os.getenv("TOKEN_TELEGRAM_LOCAL")
 TOKEN_PROD = os.getenv("TOKEN_TELEGRAM_PROD")
 
-
-### COISAS PARA MUDAR 
-def enviar_telegram(id, msg_id="", msg="", func="", file=""):
+def enviar_telegram(id, msg_id="", msg="", func="", file="", mark_down=None):
     if func == "send_msg":
-        
-        requests.post(f"https://api.telegram.org/bot{TOKEN_PROD}/sendMessage", json={
-                    "chat_id": id,
-                   "text": f"{msg}"
-                })
+        data = {
+            "chat_id": id,
+            "text": f"{msg}"
+        }
+        requests.post(f"https://api.telegram.org/bot{TOKEN_PROD}/sendMessage", json=data)
     elif func == "send_mp3":
         with open(f"rest_api/componentes/audios/ondoku{msg}.mp3", "rb") as audio:
             requests.post(f"https://api.telegram.org/bot{TOKEN_PROD}/sendAudio", data={"chat_id": id}, files={"audio": audio})

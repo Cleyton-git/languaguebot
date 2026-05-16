@@ -29,4 +29,6 @@ def chatbot_telegram(request):
         return Response(status=status.HTTP_200_OK)
     decisao.dec(tele_id, req)
     return Response(status=status.HTTP_200_OK)
+    
+    
 

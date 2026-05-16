@@ -3,12 +3,12 @@ import zipfile
 import os
 from . import enviar_telegram
 import tempfile
-from django.utils import timezone
 from datetime import timedelta
+from django.utils import timezone
 from ..models import FraseUsuario
 
+
 def criar_zip(user, frases, incluir_extras):
-    
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".zip") as temp_zip:
         zip_path = temp_zip.name
@@ -44,22 +44,20 @@ def criar_zip(user, frases, incluir_extras):
 
     user.palavra_atual = 0
     user.streak += 1
+    user.level_ondoku += 1
+    
     user.save()
+
     
 
 def gerar_txt_frases(frases_user):
-    print("CRIANDO TXT")
     conteudo = ""
 
     for f in frases_user:
-        print("ENTROU")
         print(f.palavra)
         print(f.frase)
         traducao = GoogleTranslator(source='en', target='pt').translate(f.palavra)
         conteudo += f"{f.palavra} - {traducao} | {f.frase}\n"
-        print("Escreveu")
-    
-    print("RETORNOU")
 
     return conteudo
 

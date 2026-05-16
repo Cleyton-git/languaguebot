@@ -1,17 +1,17 @@
-Lucy: Hello
-Librarian: Hello, what's your name? 
-Lucy: My name's Lucy. 
-Librarian: And what's your surname, Lucy? 
-Lucy: Moore. 
-Librarian: Can you spell that? 
-Lucy: M-O-O-R-E.
-Librarian: Thank you. What class are you in? 
-Lucy: Class 1B. 
-Librarian: Class 1B.
-Librarian: And how old are you, Lucy? 
-Lucy: I'm thirteen. 
-Librarian: Have you got a photo? 
-Lucy: Yes. Here you are.
-Librarian: Thank you. Okay. Thank you, Lucy. Here's your school library card. 
-Lucy: Thanks. Bye.
-Librarian: Goodbye.
+👧: Hello
+👦: Hello, what's your name? 
+👧: My name's Lucy. 
+👦: And what's your surname, Lucy? 
+👧: Moore. 
+👦: Can you spell that? 
+👧: M-O-O-R-E.
+👦: Thank you. What class are you in? 
+👧: Class 1B. 
+👦: Class 1B.
+👦: And how old are you, Lucy? 
+👧: I'm thirteen. 
+👦: Have you got a photo? 
+👧: Yes. Here you are.
+👦: Thank you. Okay. Thank you, Lucy. Here's your school library card. 
+👧: Thanks. Bye.
+👦: Goodbye.

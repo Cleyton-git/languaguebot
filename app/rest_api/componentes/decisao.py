@@ -3,15 +3,18 @@ from ..models import Usuario, FraseUsuario, UsuarioOndoku
 from . import enviar_telegram, backend_tela_jornada, integracao_ia
 from datetime import timedelta
 from django.utils import timezone
-from .gerar_zip import criar_zip
 from . import send_bugs
 import threading
-import os
-import json
 
 def dec(tele_id, req):
     user = Usuario.objects.filter(telegram_id=tele_id).first()
     if user:
+        if user.user_cowndown and timezone.now() < user.user_cowndown:
+            enviar_telegram.enviar_telegram(id=user.telegram_id, msg="⏳ Calma aí campeão KKKK, não precisa flodar", func="send_msg")
+            return
+        user.user_cowndown = timezone.now() + timedelta(seconds=3)
+        user.save()
+        
         if req[:5] == "/help":
             if len(req) == 5:
                 enviar_telegram.enviar_telegram(id=tele_id, msg="Digite algo além de só '/help'", func="send_msg")
@@ -65,16 +68,15 @@ def dec(tele_id, req):
         elif user.tela_atual == "jornada":
             return backend_tela_jornada.processar_palavra(user, req)
         
+        elif user.tela_atual == "ask ondoku":
+            telas.Tela_ask_ondoku(user, req)
+        
         elif user.tela_atual == "ondoku":
-            user_ondoku, created = UsuarioOndoku.objects.get_or_create(
-                usuario=user,
-                defaults={"ondoku_atual": 0}
-            )
+            user_ondoku = UsuarioOndoku.objects.filter(usuario=user).first()
             telas.Tela_ondoku(user, req, user_ondoku)
             
         elif user.tela_atual == "final":
             frases_user = FraseUsuario.objects.filter(usuario=tele_id).all()
-            
             enviar_telegram.enviar_telegram(id=tele_id, msg="🤖 O bot vai analisar suas frases e verificar se elas estão corretas.\n\nIsso pode levar alguns segundos ⏳", func="send_msg")
             threading.Thread(
                 target=integracao_ia.Func_integracao_ia,
@@ -105,4 +107,6 @@ def dec(tele_id, req):
             )
     else:
         enviar_telegram.enviar_telegram(id=tele_id, msg="Você deve digitar /ativar e seu código\nEX: /ativar 000\nUse /keys para ver os códigos disponiveis", func="send_msg")
+    
+    
         

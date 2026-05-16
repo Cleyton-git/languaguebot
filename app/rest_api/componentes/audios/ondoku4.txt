@@ -1,0 +1,14 @@
+👩 - Next please. What would you like?
+🧑 - Can I have a burger please?
+👩 - A cheeseburger or double cheeseburger?
+🧑 - Double cheeseburger please.
+👩 - Anything else?
+🧑 - Yeah, I'd like some banana cake. 
+👩 - Would you like a drink?
+🧑 - Yes, can I have an apple juice please?
+👩 - Okay, so that's one double cheeseburger, one banana cake and an apple juice. What's your table number?
+🧑 - Table three. How much is that?
+👩 - That's £8.37 please.
+🧑 - Um, here you are. 
+👩 - Thank you. That's £10 and £1.63 change. 
+👩 - Next please.

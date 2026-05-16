@@ -1,0 +1,17 @@
+🧑 - Can I help you? 
+👩 - Yes, have you got this T-shirt in other colours? 
+🧑 - We've got it in white, black, red and purple. What size do you want? 
+👩 - Medium. 
+🧑 - OK. In medium we've got black and red. 
+👩 - And in purple? 
+🧑 - No, just black and red. 
+👩 - OK, red. Can I try it on? 
+🧑 - Yes, of course. The changing rooms are over there. 
+🧑 - Is it OK? 
+👩 - Yes, I'll take it.
+🧑 - Oh, that's £10.95. Would you like to pay by a credit card or with cash? 
+👩 - Cash, please. Here's 20.
+🧑 - OK, thanks.
+🧑 - That's £9.05p change. And here's your receipt. 
+👩 - Thanks, bye.
+🧑 - You're welcome.

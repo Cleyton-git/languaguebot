@@ -16,6 +16,8 @@ class Usuario(models.Model):
     proximo_estudo = models.DateTimeField(null=True, blank=True)
     reminder_minutes = models.IntegerField(default=1440)
     reminder_jornada = models.IntegerField(default=-1)
+    level_ondoku = models.IntegerField(default=1)
+    user_cowndown = models.DateTimeField(null=True, blank=True)
     
     def __str__(self):
         return f"{self.nome_usuario}, {self.tela_atual}, {self.reminder_minutes}"
@@ -30,7 +32,8 @@ class FraseUsuario(models.Model):
 
 class UsuarioOndoku(models.Model):
     usuario = models.ForeignKey("Usuario", on_delete=models.CASCADE)
-    ondoku_atual = models.IntegerField(default=0)
+    ondoku_atual = models.IntegerField(default=1)
+    op_user = models.IntegerField(default=1)
     
     def __str__(self):
         return f"{self.usuario} + {self.ondoku_atual}"

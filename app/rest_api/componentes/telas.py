@@ -3,7 +3,9 @@ from .backend_tela_jornada import pegar_palavra
 from ..models import Usuario, FraseUsuario
 from django.utils import timezone
 from deep_translator import GoogleTranslator
-
+from ..models import UsuarioOndoku
+import threading
+from . import integracao_ia
 
 def Tela_incial(tele_id):
     user = Usuario.objects.filter(telegram_id=tele_id).first()
@@ -41,67 +43,71 @@ def Tela_frases(user):
 )
     return
 
-def Tela_ondoku(user, req, user_ondoku):
-    id = user.telegram_id
-    streak = user.streak
-    ondoku_atual = user_ondoku.ondoku_atual
-    if streak < 10:
-        if ondoku_atual == 0:
-            enviar_telegram.enviar_telegram(id=user.telegram_id, msg=f"Você esta no treino de fala agora, vc deve:\n1 - Ler o texto em voz alta\n2 - Ouvir o audio do texto\n3 - Ler o texto novamente com o audio", func="send_msg")
-            with open("rest_api/componentes/audios/ondoku1.txt", "r") as f:
-                texto = f.read()
-                linhas = texto.split("\n")
-                resultado = []
-                
-                for linha in linhas:
-                    if "Librarian:" in linha:
-                        resultado.append("👩 " + linha)
-                    elif "Lucy:" in linha:
-                        resultado.append("👧 " + linha)
-                    else:
-                        resultado.append(linha)
-                msg="\n".join(resultado)
-                
-                enviar_telegram.enviar_telegram(id=user.telegram_id, msg=msg, func="send_msg")
-            enviar_telegram.enviar_telegram(id=user.telegram_id, msg=f"Digite '/ok' quando terminar", func="send_msg")
-            user_ondoku.ondoku_atual += 1
-            user_ondoku.save()
-        elif req.lower() == "/ok" and ondoku_atual == 1:
-            enviar_telegram.enviar_telegram(id=id, msg=f"Tente ler enquanto ouve o audio", func="send_msg")
-            enviar_telegram.enviar_telegram(id=id, msg=f"O telegram esta carregando seu audio, pode demorar um pouco", func="send_msg")
-            enviar_telegram.enviar_telegram(id=id, func="send_mp3", msg="1")
-            enviar_telegram.enviar_telegram(id=id, msg=f"Digite '/ok' quando terminar", func="send_msg")
-            user_ondoku.ondoku_atual += 1
-            user_ondoku.save()
-        elif req.lower() == "/ok" and ondoku_atual == 2:
-            enviar_telegram.enviar_telegram(id=id, msg=f"Releia o texto com o audio (se não conseguir apenas releia)", func="send_msg")
-            with open("rest_api/componentes/audios/ondoku1.txt", "r") as f:
-                texto = f.read()
-                linhas = texto.split("\n")
-                resultado = []
-                
-                for linha in linhas:
-                    if "Librarian:" in linha:
-                        resultado.append("👩 " + linha)
-                    elif "Lucy:" in linha:
-                        resultado.append("👧 " + linha)
-                    else:
-                        resultado.append(linha)
-                msg="\n".join(resultado)
-                
-                enviar_telegram.enviar_telegram(id=user.telegram_id, msg=msg, func="send_msg")
-            enviar_telegram.enviar_telegram(id=id, msg=f"Digite '/ok' quando terminar", func="send_msg")
-            user_ondoku.ondoku_atual += 1
-            user_ondoku.save()
-        elif req.lower() == "/ok" and ondoku_atual == 3:
-            user_ondoku.ondoku_atual = 0
-            user_ondoku.save()
-            user.tela_atual = "final"
-            user.save()
-        else:
-            enviar_telegram.enviar_telegram(id=id, msg=f"Digite /ok", func="send_msg")
-    return
+def Tela_ask_ondoku(user, req):
+    lista_ops = ["1", "2", "3", "4", "5", "6"]
+    print(req)
+    if req in lista_ops and user.level_ondoku >= int(req):
+        enviar_telegram.enviar_telegram(id=user.telegram_id, msg=
+                                        "🎧 Você entrou no treino de fala!\n\n"
 
+                                        "Você deve seguir estes passos:\n\n"#
+
+                                        "1️⃣ Ler o texto em voz alta\n"
+                                        "2️⃣ Ouvir o áudio do texto\n"
+                                        "3️⃣ Ler o texto novamente junto com o áudio\n\n"
+
+                                        "🔥 Esse treino vai melhorar:\n"
+                                        "• Sua pronúncia\n"
+                                        "• Sua escuta\n"
+                                        "• Sua velocidade no inglês\n"
+                                        "• Sua confiança ao falar", func="send_msg")
+        user.tela_atual = "ondoku"
+        user.save()
+        user_ondoku = UsuarioOndoku.objects.get_or_create(usuario=user, defaults={"ondoku_atual": 0, "op_user": int(req)})
+        user_ondoku = UsuarioOndoku.objects.filter(usuario=user).first()
+        Tela_ondoku(user, req, user_ondoku)
+    else:
+        enviar_telegram.enviar_telegram(id=user.telegram_id, msg="Digite uma das opções disponiveis", func="send_msg")
+        return
+    
+
+def Tela_ondoku(user, req, user_ondoku):
+    caminho = f"rest_api/componentes/audios/ondoku{user_ondoku.op_user}.txt"
+    if user_ondoku.ondoku_atual == 0:
+        with open(caminho, "r", encoding="utf-8") as arquivo:
+            texto = arquivo.read()
+            enviar_telegram.enviar_telegram(id=user.telegram_id, msg=texto, func="send_msg")
+        enviar_telegram.enviar_telegram(id=user.telegram_id, msg="Digite /ok quando terminar", func="send_msg")
+        user_ondoku.ondoku_atual += 1
+        user_ondoku.save()
+    elif req == "/ok" and user_ondoku.ondoku_atual == 1:
+        enviar_telegram.enviar_telegram(id=user.telegram_id, msg="O telegram esta carregando seu audio...\nPode demorar um pouco", func="send_msg")
+        enviar_telegram.enviar_telegram(id=user.telegram_id, func="send_mp3", msg=f"{user_ondoku.op_user}")
+        enviar_telegram.enviar_telegram(id=user.telegram_id, msg="Digite /ok quando terminar", func="send_msg")
+        user_ondoku.ondoku_atual += 1
+        user_ondoku.save()
+    elif req == "/ok" and user_ondoku.ondoku_atual == 2:
+        with open(caminho, "r", encoding="utf-8") as arquivo:
+            texto = arquivo.read()
+            enviar_telegram.enviar_telegram(id=user.telegram_id, msg=texto, func="send_msg")
+        enviar_telegram.enviar_telegram(id=user.telegram_id, msg="Digite /ok quando terminar", func="send_msg")
+        user_ondoku.ondoku_atual += 1
+        user_ondoku.save()
+    elif req == "/ok" and user_ondoku.ondoku_atual == 3:
+        user_ondoku.delete()
+        user.tela_atual = "final"
+        user.save()
+        frases_user = FraseUsuario.objects.filter(usuario=user.telegram_id).all()
+        enviar_telegram.enviar_telegram(id=user.telegram_id, msg="🤖 O bot vai analisar suas frases e verificar se elas estão corretas.\n\nIsso pode levar alguns segundos ⏳", func="send_msg")
+        threading.Thread(
+            target=integracao_ia.Func_integracao_ia,
+            args=(user, frases_user),
+            daemon=True
+        ).start()
+    else:
+        enviar_telegram.enviar_telegram(id=user.telegram_id, msg="Digite /ok, teste", func="send_msg")
+        return
+    
 def Tela_imersao(user):
     return
     
