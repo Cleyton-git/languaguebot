@@ -21,6 +21,7 @@ def Reminder_jornada(request):
 
 @api_view(["POST"])
 def chatbot_telegram(request):
+    
     tele_id = request.data['message']['chat']['id'] # pega o id
     req = request.data['message']['text'] # pega a req 
     

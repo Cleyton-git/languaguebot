@@ -4,17 +4,11 @@ from . import enviar_telegram, backend_tela_jornada, integracao_ia
 from datetime import timedelta
 from django.utils import timezone
 from . import send_bugs
-import threading
+import threading, requests
 
 def dec(tele_id, req):
     user = Usuario.objects.filter(telegram_id=tele_id).first()
     if user:
-        if user.user_cowndown and timezone.now() < user.user_cowndown:
-            enviar_telegram.enviar_telegram(id=user.telegram_id, msg="⏳ Calma aí campeão KKKK, não precisa flodar", func="send_msg")
-            return
-        user.user_cowndown = timezone.now() + timedelta(seconds=3)
-        user.save()
-        
         if req[:5] == "/help":
             if len(req) == 5:
                 enviar_telegram.enviar_telegram(id=tele_id, msg="Digite algo além de só '/help'", func="send_msg")

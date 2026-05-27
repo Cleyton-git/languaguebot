@@ -1,14 +1,9 @@
+import json, threading, os, re
 from ..models import FraseUsuario
-import json
 import google.generativeai as genai
 from . import enviar_telegram, gerar_zip
-import threading
 from django.utils import timezone
-import os
 from dotenv import load_dotenv
-import time
-import re
-
 
 load_dotenv()
 
@@ -105,6 +100,7 @@ FORMATO OBRIGATÓRIO:
                 func="send_msg"
             )
             return
+        
     response = response.text
     inicio = response.rfind('{\n    "todas_certas"')
 
@@ -112,7 +108,6 @@ FORMATO OBRIGATÓRIO:
         inicio = response.rfind('{"todas_certas"')
 
     json_limpo = response[inicio:]
-    print(json_limpo)
     try:
         data = json.loads(json_limpo)
     except Exception as e:
